@@ -215,7 +215,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue"
     <h1 id="headerTitle">家庭记账</h1>
     <div style="display:flex;align-items:center;gap:8px">
       <span id="syncBadge" style="font-size:11px;color:var(--success);opacity:0;transition:opacity .3s;font-weight:500">已同步</span>
-      <button id="syncBtn" class="header-btn" onclick="manualSync()" title="手动同步" style="display:none">🔄</button>
+      <button id="syncBtn" class="header-btn" onclick="manualSync()" title="手动同步">🔄</button>
       <button class="header-btn" onclick="showSettings()" title="设置">⚙️</button>
     </div>
   </div>
@@ -1297,7 +1297,6 @@ async function createCloud(){
     lastSyncHash=JSON.stringify({transactions,members});
     renderHome();
     startSmartSync();
-    document.getElementById('syncBtn').style.display='';
   }else{
     showToast('创建失败，请检查Key是否正确');
   }
@@ -1316,7 +1315,6 @@ function connectCloud(){
     lastSyncHash=JSON.stringify({transactions,members});
     renderHome();
     startSmartSync();
-    document.getElementById('syncBtn').style.display='';
     showToast('已连接家庭账本');
   },500);
 }
@@ -1326,7 +1324,6 @@ function disconnectCloud(){
   JSONBIN_KEY='';JSONBIN_BIN='';
   localStorage.removeItem('jsonbin_key');
   localStorage.removeItem('jsonbin_bin');
-  document.getElementById('syncBtn').style.display='none';
   closeDetailModal();
   showToast('已断开云同步');
 }
@@ -1355,10 +1352,9 @@ function startSmartSync(){
 loadData().then(()=>{
   lastSyncHash = JSON.stringify({transactions, members});
   renderHome();
-  // 有云端Key时才启动智能同步并显示同步按钮
+  // 有云端Key时才启动智能同步
   if(JSONBIN_KEY && JSONBIN_BIN){
     startSmartSync();
-    document.getElementById('syncBtn').style.display='';
     document.addEventListener('visibilitychange', ()=>{
       if(!document.hidden) syncData();
     });
